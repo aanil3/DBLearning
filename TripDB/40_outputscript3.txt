@@ -1,0 +1,296 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SELECT tripname FROM bustrip WHERE visitcountry = "Italy"
+--------------
+
++------------------+
+| tripname         |
++------------------+
+| Tuscany Sunsets  |
+| Arrivaderci Roma |
++------------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT DISTINCT lname FROM passenger
+--------------
+
++----------+
+| lname    |
++----------+
+| Simpson  |
+| Flanders |
+| Klum     |
+| Scott    |
+| Schrute  |
+| Beesly   |
+| Bratton  |
+| Elric    |
++----------+
+8 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM bustrip
+ORDER BY tripname
+--------------
+
++--------+----------------------------+------------+------------+--------------+--------------+
+| tripid | tripname                   | startdate  | enddate    | visitcountry | licenseplate |
++--------+----------------------------+------------+------------+--------------+--------------+
+|     10 | A Trip To Spider Land      | 2022-08-01 | 2022-08-15 | Australia    | TAXI333      |
+|      6 | Arrivaderci Roma           | 2022-07-05 | 2022-07-15 | Italy        | TAXI111      |
+|      4 | Beaches Galore             | 2022-04-04 | 2022-04-14 | Bermuda      | TAXI222      |
+|      3 | California Wines           | 2022-05-05 | 2022-05-10 | USA          | VAN1111      |
+|      1 | Castles of Germany         | 2022-01-01 | 2022-01-17 | Germany      | VAN1111      |
+|      5 | Cottage Country            | 2022-06-01 | 2022-06-22 | Canada       | CAND123      |
+|      8 | Disney World and Sea World | 2022-06-10 | 2022-06-20 | USA          | VAN1111      |
+|      9 | Merlion Vacation           | 2022-07-01 | 2022-07-15 | Singapore    | CAND123      |
+|      7 | Shetland and Orkney        | 2022-09-09 | 2022-09-29 | UK           | TAXI111      |
+|      2 | Tuscany Sunsets            | 2022-03-03 | 2022-03-14 | Italy        | TAXI222      |
++--------+----------------------------+------------+------------+--------------+--------------+
+10 rows in set (0.00 sec)
+
+--------------
+SELECT tripname, visitcountry, startdate FROM bustrip
+WHERE startdate > "2022-04-30"
+--------------
+
++----------------------------+--------------+------------+
+| tripname                   | visitcountry | startdate  |
++----------------------------+--------------+------------+
+| California Wines           | USA          | 2022-05-05 |
+| Cottage Country            | Canada       | 2022-06-01 |
+| Arrivaderci Roma           | Italy        | 2022-07-05 |
+| Shetland and Orkney        | UK           | 2022-09-09 |
+| Disney World and Sea World | USA          | 2022-06-10 |
+| Merlion Vacation           | Singapore    | 2022-07-01 |
+| A Trip To Spider Land      | Australia    | 2022-08-01 |
++----------------------------+--------------+------------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT passenger.fname, passenger.lname, passport.birthdate FROM passenger
+JOIN passport
+ON passenger.passengerid = passport.passengerid
+WHERE passport.country = "USA"
+--------------
+
++--------+----------+------------+
+| fname  | lname    | birthdate  |
++--------+----------+------------+
+| Homer  | Simpson  | 1970-02-19 |
+| Marge  | Simpson  | 1972-08-12 |
+| Bart   | Simpson  | 2001-05-12 |
+| Lisa   | Simpson  | 2004-03-19 |
+| Maggie | Simpson  | 2012-09-17 |
+| Ned    | Flanders | 1950-06-11 |
+| Todd   | Flanders | 1940-06-24 |
++--------+----------+------------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT bustrip.tripname, bus.capacity FROM bustrip
+JOIN bus
+ON bustrip.licenseplate = bus.licenseplate
+WHERE bustrip.startdate > "2022-04-01" AND bustrip.startdate < "2022-09-01"
+--------------
+
++----------------------------+----------+
+| tripname                   | capacity |
++----------------------------+----------+
+| Cottage Country            |       50 |
+| Merlion Vacation           |       50 |
+| Arrivaderci Roma           |        4 |
+| Beaches Galore             |        3 |
+| A Trip To Spider Land      |        4 |
+| California Wines           |       10 |
+| Disney World and Sea World |       10 |
++----------------------------+----------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT * FROM passport
+JOIN passenger
+ON passport.passengerid = passenger.passengerid
+WHERE passport.expirydate > (SELECT ADDDATE(CURDATE(), INTERVAL 365 DAY))
+--------------
+
++------------+----------+------------+------------+-------------+-------------+--------+----------+
+| passportno | country  | expirydate | birthdate  | passengerid | passengerid | fname  | lname    |
++------------+----------+------------+------------+-------------+-------------+--------+----------+
+| AM01       | Amestris | 2025-01-01 | 1899-02-03 |          99 |          99 | Edward | Elric    |
+| GE11       | Germany  | 2027-01-01 | 1970-07-12 |          66 |          66 | Heidi  | Klum     |
+| US10       | USA      | 2025-01-01 | 1970-02-19 |          11 |          11 | Homer  | Simpson  |
+| US12       | USA      | 2025-01-01 | 1972-08-12 |          22 |          22 | Marge  | Simpson  |
+| US13       | USA      | 2025-01-01 | 2001-05-12 |          33 |          33 | Bart   | Simpson  |
+| US14       | USA      | 2025-01-01 | 2004-03-19 |          34 |          34 | Lisa   | Simpson  |
+| US15       | USA      | 2025-01-01 | 2012-09-17 |          35 |          35 | Maggie | Simpson  |
+| US22       | USA      | 2030-04-04 | 1950-06-11 |          44 |          44 | Ned    | Flanders |
+| US91       | Germany  | 2030-01-01 | 1959-02-02 |          80 |          80 | Creed  | Bratton  |
++------------+----------+------------+------------+-------------+-------------+--------+----------+
+9 rows in set (0.00 sec)
+
+--------------
+SELECT passenger.fname, passenger.lname, bustrip.tripname FROM passenger
+JOIN tripbooking ON passenger.passengerid = tripbooking.passengerid
+JOIN bustrip ON tripbooking.tripid = bustrip.tripid
+WHERE passenger.lname LIKE "S%"
+--------------
+
++---------+---------+----------------------------+
+| fname   | lname   | tripname                   |
++---------+---------+----------------------------+
+| Homer   | Simpson | Castles of Germany         |
+| Marge   | Simpson | Castles of Germany         |
+| Bart    | Simpson | Castles of Germany         |
+| Lisa    | Simpson | Castles of Germany         |
+| Maggie  | Simpson | Castles of Germany         |
+| Dwight  | Schrute | Castles of Germany         |
+| Dwight  | Schrute | Beaches Galore             |
+| Homer   | Simpson | Arrivaderci Roma           |
+| Marge   | Simpson | Arrivaderci Roma           |
+| Bart    | Simpson | Arrivaderci Roma           |
+| Lisa    | Simpson | Arrivaderci Roma           |
+| Maggie  | Simpson | Arrivaderci Roma           |
+| Homer   | Simpson | Shetland and Orkney        |
+| Michael | Scott   | Shetland and Orkney        |
+| Bart    | Simpson | Disney World and Sea World |
+| Lisa    | Simpson | Disney World and Sea World |
++---------+---------+----------------------------+
+16 rows in set (0.00 sec)
+
+--------------
+SELECT DISTINCT (SELECT COUNT(passengerid) FROM tripbooking), bustrip.tripid, bustrip.tripname FROM tripbooking, bustrip
+WHERE bustrip.tripid = tripbooking.tripid AND bustrip.tripid = "1"
+--------------
+
++----------------------------------------------+--------+--------------------+
+| (SELECT COUNT(passengerid) FROM tripbooking) | tripid | tripname           |
++----------------------------------------------+--------+--------------------+
+|                                           22 |      1 | Castles of Germany |
++----------------------------------------------+--------+--------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT DISTINCT SUM(tripbooking.cost), bustrip.visitcountry FROM tripbooking, bustrip
+WHERE bustrip.tripid = tripbooking.tripid
+GROUP BY bustrip.tripid
+--------------
+
++-----------------------+--------------+
+| SUM(tripbooking.cost) | visitcountry |
++-----------------------+--------------+
+|                  2751 | Germany      |
+|                  1200 | Bermuda      |
+|                  1500 | Italy        |
+|                  1200 | UK           |
+|                  1200 | USA          |
+|                   399 | Australia    |
++-----------------------+--------------+
+6 rows in set (0.00 sec)
+
+--------------
+SELECT passenger.fname, passenger.lname, passport.country, bustrip.tripname, bustrip.visitcountry FROM passenger
+JOIN passport ON passenger.passengerid = passport.passengerid
+JOIN tripbooking ON passport.passengerid = tripbooking.passengerid
+JOIN bustrip ON tripbooking.tripid = bustrip.tripid
+WHERE passport.country != bustrip.visitcountry
+--------------
+
++---------+----------+----------+-----------------------+--------------+
+| fname   | lname    | country  | tripname              | visitcountry |
++---------+----------+----------+-----------------------+--------------+
+| Homer   | Simpson  | USA      | Castles of Germany    | Germany      |
+| Marge   | Simpson  | USA      | Castles of Germany    | Germany      |
+| Bart    | Simpson  | USA      | Castles of Germany    | Germany      |
+| Lisa    | Simpson  | USA      | Castles of Germany    | Germany      |
+| Maggie  | Simpson  | USA      | Castles of Germany    | Germany      |
+| Dwight  | Schrute  | Germany  | Beaches Galore        | Bermuda      |
+| Creed   | Bratton  | Germany  | Beaches Galore        | Bermuda      |
+| Homer   | Simpson  | USA      | Arrivaderci Roma      | Italy        |
+| Marge   | Simpson  | USA      | Arrivaderci Roma      | Italy        |
+| Bart    | Simpson  | USA      | Arrivaderci Roma      | Italy        |
+| Lisa    | Simpson  | USA      | Arrivaderci Roma      | Italy        |
+| Maggie  | Simpson  | USA      | Arrivaderci Roma      | Italy        |
+| Homer   | Simpson  | USA      | Shetland and Orkney   | UK           |
+| Ned     | Flanders | USA      | Shetland and Orkney   | UK           |
+| Michael | Scott    | Canada   | Shetland and Orkney   | UK           |
+| Edward  | Elric    | Amestris | A Trip To Spider Land | Australia    |
++---------+----------+----------+-----------------------+--------------+
+16 rows in set (0.00 sec)
+
+--------------
+SELECT bustrip.tripid, tripname FROM bustrip
+WHERE bustrip.tripid NOT IN (SELECT tripid FROM tripbooking)
+--------------
+
++--------+------------------+
+| tripid | tripname         |
++--------+------------------+
+|      2 | Tuscany Sunsets  |
+|      3 | California Wines |
+|      5 | Cottage Country  |
+|      9 | Merlion Vacation |
++--------+------------------+
+4 rows in set (0.00 sec)
+
+--------------
+SELECT DISTINCT SUM(tripbooking.cost), passenger.fname, passenger.lname, passport.country FROM tripbooking, passenger, passport
+WHERE tripbooking.passengerid = passenger.passengerid AND passport.passengerid = passenger.passengerid
+GROUP BY passenger.passengerid
+ORDER BY SUM(tripbooking.cost) DESC
+LIMIT 1
+--------------
+
++-----------------------+-------+---------+---------+
+| SUM(tripbooking.cost) | fname | lname   | country |
++-----------------------+-------+---------+---------+
+|                  1400 | Homer | Simpson | USA     |
++-----------------------+-------+---------+---------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT bustrip.tripname, COUNT(tripbooking.tripid) FROM bustrip
+LEFT JOIN tripbooking ON bustrip.tripid = tripbooking.tripid
+GROUP BY bustrip.tripname
+HAVING COUNT(tripbooking.tripid) < 4
+ORDER BY COUNT(tripbooking.tripid) DESC
+--------------
+
++-----------------------+---------------------------+
+| tripname              | COUNT(tripbooking.tripid) |
++-----------------------+---------------------------+
+| Shetland and Orkney   |                         3 |
+| Beaches Galore        |                         2 |
+| A Trip To Spider Land |                         1 |
+| Cottage Country       |                         0 |
+| Tuscany Sunsets       |                         0 |
+| Merlion Vacation      |                         0 |
+| California Wines      |                         0 |
++-----------------------+---------------------------+
+7 rows in set (0.00 sec)
+
+--------------
+SELECT bustrip.tripname as "Bus Trip Name", COUNT(tripbooking.tripid) as "Current Number of Passengers", bus.licenseplate as "Current Bus Assigned License Plate", bus.capacity as "Capacity of Assigned Bus" FROM bustrip
+LEFT JOIN tripbooking ON bustrip.tripid = tripbooking.tripid
+LEFT JOIN bus ON bustrip.licenseplate = bus.licenseplate
+GROUP BY bustrip.tripname
+--------------
+
++----------------------------+------------------------------+------------------------------------+--------------------------+
+| Bus Trip Name              | Current Number of Passengers | Current Bus Assigned License Plate | Capacity of Assigned Bus |
++----------------------------+------------------------------+------------------------------------+--------------------------+
+| A Trip To Spider Land      |                            1 | TAXI333                            |                        4 |
+| Arrivaderci Roma           |                            5 | TAXI111                            |                        4 |
+| Beaches Galore             |                            2 | TAXI222                            |                        3 |
+| California Wines           |                            0 | VAN1111                            |                       10 |
+| Castles of Germany         |                            7 | VAN1111                            |                       10 |
+| Cottage Country            |                            0 | CAND123                            |                       50 |
+| Disney World and Sea World |                            4 | VAN1111                            |                       10 |
+| Merlion Vacation           |                            0 | CAND123                            |                       50 |
+| Shetland and Orkney        |                            3 | TAXI111                            |                        4 |
+| Tuscany Sunsets            |                            0 | TAXI222                            |                        3 |
++----------------------------+------------------------------+------------------------------------+--------------------------+
+10 rows in set (0.00 sec)
+
+Bye

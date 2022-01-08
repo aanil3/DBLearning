@@ -1,0 +1,113 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SHOW DATABASES
+--------------
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| 40_assign2db       |
+| junkdb             |
+| mysql              |
+| performance_schema |
+| vetoffice          |
++--------------------+
+6 rows in set (0.00 sec)
+
+--------------
+DROP DATABASE IF EXISTS 40_assign2db
+--------------
+
+Query OK, 6 rows affected (0.36 sec)
+
+--------------
+CREATE DATABASE 40_assign2db
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+SHOW TABLES
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+CREATE TABLE passenger(
+	passengerid integer NOT NULL,
+	fname varchar(20) NOT NULL,
+	lname varchar(20) NOT NULL,
+	UNIQUE (passengerid),
+	PRIMARY KEY (passengerid))
+--------------
+
+Query OK, 0 rows affected (0.27 sec)
+
+--------------
+CREATE TABLE passport(
+	passportno varchar(4) NOT NULL, 
+	country varchar(30) NOT NULL,
+	expirydate DATE NOT NULL, 
+	birthdate DATE NOT NULL,
+	passengerid integer NOT NULL,
+	FOREIGN KEY (passengerid) REFERENCES passenger(passengerid) ON DELETE CASCADE,
+	UNIQUE (passportno), 
+	PRIMARY KEY (passportno))
+--------------
+
+Query OK, 0 rows affected (0.10 sec)
+
+--------------
+CREATE TABLE bus(
+	licenseplate varchar(7) NOT NULL,
+	capacity integer NOT NULL,
+	UNIQUE (licenseplate),
+	PRIMARY KEY (licenseplate))
+--------------
+
+Query OK, 0 rows affected (0.09 sec)
+
+--------------
+CREATE TABLE bustrip(
+	tripid integer NOT NULL,
+	tripname varchar(50) NOT NULL,
+	startdate DATE NOT NULL,
+	enddate DATE NOT NULL,
+	visitcountry varchar(30) NOT NULL,
+	licenseplate varchar(7) NOT NULL,
+	FOREIGN KEY (licenseplate) REFERENCES bus(licenseplate),
+	UNIQUE (tripid),
+	PRIMARY KEY (tripid))
+--------------
+
+Query OK, 0 rows affected (0.08 sec)
+
+--------------
+CREATE TABLE tripbooking(
+	passengerid integer NOT NULL,
+	tripid integer NOT NULL,
+	cost integer NOT NULL,
+	FOREIGN KEY (passengerid) REFERENCES passenger(passengerid) ON DELETE CASCADE,
+	FOREIGN KEY (tripid) REFERENCES bustrip(tripid),
+	PRIMARY KEY (tripid, passengerid))
+--------------
+
+Query OK, 0 rows affected (0.24 sec)
+
+--------------
+SHOW TABLES
+--------------
+
++------------------------+
+| Tables_in_40_assign2db |
++------------------------+
+| bus                    |
+| bustrip                |
+| passenger              |
+| passport               |
+| tripbooking            |
++------------------------+
+5 rows in set (0.00 sec)
+
+Bye
